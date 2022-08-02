@@ -5,7 +5,34 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    int width = 100;
+    int height = 30;
+
+    char* screen = new char[width * height + 1];
+
+    screen[width * height] = '\0';
+
+    float aspect_ratio = (float)width / (float)height;
+    float pixel_aspect_ratio = 11.0f / 24.0f;
+
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++) {
+
+            float x = float(i) / width * 2.0f - 1.0f;
+            float y = float(j) / height * 2.0f - 1.0f;
+
+            x = x * aspect_ratio * pixel_aspect_ratio;
+
+            char pixel = ' ';
+            if (x * x + y * y < 0.5) {
+                pixel = '#';
+            }
+             
+            screen[i + j * width] = pixel;
+        }
+    }
+
+    printf(screen);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
