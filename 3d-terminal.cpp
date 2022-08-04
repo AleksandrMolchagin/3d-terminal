@@ -14,25 +14,31 @@ int main()
 
     float aspect_ratio = (float)width / (float)height;
     float pixel_aspect_ratio = 11.0f / 24.0f;
+    
+    for (int frame = 0; frame < 10000; frame++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
 
-    for (int i = 0; i < width; i++){
-        for (int j = 0; j < height; j++) {
+                float x = float(i) / width * 2.0f - 1.0f;
+                float y = float(j) / height * 2.0f - 1.0f;
 
-            float x = float(i) / width * 2.0f - 1.0f;
-            float y = float(j) / height * 2.0f - 1.0f;
+                //adapt image for screen ration and pixel ration
+                x = x * aspect_ratio * pixel_aspect_ratio;
 
-            x = x * aspect_ratio * pixel_aspect_ratio;
+                //move the image
+                x = x + cos(frame * 0.001);
 
-            char pixel = ' ';
-            if (x * x + y * y < 0.5) {
-                pixel = '#';
+                char pixel = ' ';
+                if (x * x + y * y < 0.5) {
+                    pixel = '#';
+                }
+
+                screen[i + j * width] = pixel;
             }
-             
-            screen[i + j * width] = pixel;
         }
+        printf(screen);
     }
-
-    printf(screen);
+    
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
