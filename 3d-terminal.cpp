@@ -2,20 +2,50 @@
 //
 
 #include <iostream>
+#include <windows.h> 
 
-int main()
+
+// https://stackoverflow.com/questions/12900713/reducing-console-size
+void SetWindow(int Width, int Height)
 {
-    int width = 100;
-    int height = 30;
+    _COORD coord;
+    coord.X = Width;
+    coord.Y = Height;
 
-    char* screen = new char[width * height + 1];
+    _SMALL_RECT Rect;
+    Rect.Top = 0;
+    Rect.Left = 0;
+    Rect.Bottom = Height - 1;
+    Rect.Right = Width - 1;
 
-    screen[width * height] = '\0';
+    HANDLE Handle = GetStdHandle(STD_OUTPUT_HANDLE);      // Get Handle 
+    SetConsoleScreenBufferSize(Handle, coord);            // Set Buffer Size 
+    SetConsoleWindowInfo(Handle, TRUE, &Rect);            // Set Window Size 
+}
+
+
+
+
+int main(){
+       
+    int width = 150;
+    int height = 50;
+
+    SetWindow(width, height);
+
+    //char* screen = new char[width * height + 1];
+
+    wchar_t* screen = new wchar_t[width * height];
+    HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+    SetConsoleActiveScreenBuffer(hConsole);
+    DWORD dwBytesWritten = 0;
+
+    //screen[width * height] = '\0';
 
     float aspect_ratio = (float)width / (float)height;
     float pixel_aspect_ratio = 11.0f / 24.0f;
     
-    for (int frame = 0; frame < 10000; frame++) {
+    for (int frame = 0; frame < 100000; frame++) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
 
@@ -36,7 +66,8 @@ int main()
                 screen[i + j * width] = pixel;
             }
         }
-        printf(screen);
+        //printf(screen)
+        WriteConsoleOutputCharacter(hConsole, screen, width * height, { 0, 0 }, &dwBytesWritten);
     }
     
 }
